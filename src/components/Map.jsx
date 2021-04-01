@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ReactMapGL from 'react-map-gl';
 
 const Map = () => {
+  let secrets;
   const [viewport, setViewport] = useState({
     width: '100%',
     height: 400,
@@ -15,7 +16,7 @@ const Map = () => {
     <ReactMapGL
       {...viewport}
       mapboxApiAccessToken={
-        process.env.REACT_APP_MAPBOX_TOKEN || secrets.REACT_APP_MAPBOX_TOKEN
+        process.env.REACT_APP_MAPBOX_TOKEN || secrets?.REACT_APP_MAPBOX_TOKEN
       }
       mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
