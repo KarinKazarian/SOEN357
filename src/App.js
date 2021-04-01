@@ -1,5 +1,4 @@
 import Map from './components/Map.jsx';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 const App = () => {
   return (
