@@ -3,7 +3,8 @@ import { useState } from 'react';
 import ReactMapGL from 'react-map-gl';
 
 const Map = () => {
-  let secrets;
+  const accessToken =
+    'pk.eyJ1Ijoia2FyaW4ta2F6YXJpYW4iLCJhIjoiY2tteWVjMnFpMDM4MTJubWYycTJ5N3Q5ZCJ9.Of9brpnQ8Oc-LGZ6P1ArrA';
   const [viewport, setViewport] = useState({
     width: '100%',
     height: 400,
@@ -15,9 +16,7 @@ const Map = () => {
   return (
     <ReactMapGL
       {...viewport}
-      mapboxApiAccessToken={
-        process.env.REACT_APP_MAPBOX_TOKEN || secrets?.REACT_APP_MAPBOX_TOKEN
-      }
+      mapboxApiAccessToken={accessToken}
       mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
     />
