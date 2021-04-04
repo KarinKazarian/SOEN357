@@ -1,4 +1,4 @@
-import { makeGetRequest } from './base.js';
+import { makeGetRequest } from './besttime.js';
 
 const getTest = async () => {
   return makeGetRequest('');
