@@ -1,47 +1,31 @@
-import React, { useState } from 'react';
-import { Modal, Button, Box } from '@material-ui/core';
-import { styled } from '@material-ui/core/styles';
-
-const LocationInfo = (props) => {
-  const [open, setOpen] = useState();
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
+import { Modal ,Box} from '@material-ui/core';
+import { styled } from '@material-ui/core/styles'; 
+const LocationInfo = ({isOpen, onOpen, onClose}) => {
+  
   const LocationModal = styled(Box)({
     width: 300,
     height: 300,
     background: 'white',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
     outline: 'none',
+    marginTop: '150px',
+    marginLeft: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
   });
 
-  return (
-    <div>
-      <Button type="button" onClick={handleOpen}>
-        Open Modal
-      </Button>
-      <Modal
-        BackdropProps={{ invisible: true }}
-        open={open}
-        onClose={handleClose}
-        disableAutoFocus={true}
-      >
-        <LocationModal disableAutoFocus={true} autoFocus={false}>
-          {props.name}
-        </LocationModal>
-      </Modal>
-    </div>
-  );
+
+return (
+  <Modal
+  BackdropProps={{ invisible: true }}
+  open={isOpen}
+  disableAutoFocus={true}
+  disableEnforceFocus
+  onClose={onClose}
+>
+  <LocationModal autoFocus={false}>hello</LocationModal>
+</Modal>
+);
 };
 
 export default LocationInfo;
