@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 const apiUrl =
-  'https://besttime.app/api/v1/keys/pri_7b5f18965b7d46a5b708eeee58fc2354';
+  'https://besttime.app/api/v1/forecasts';
 
-const makeRequest = async (method, endpoint, body = {}, params = {}) => {
+const makeRequest = async (method, body = {}, params = {}) => {
   const options = {
     method: method,
-    url: `${apiUrl}/${endpoint}`,
+    url: `${apiUrl}`,
     data: body,
     params: params,
   };
@@ -15,12 +15,12 @@ const makeRequest = async (method, endpoint, body = {}, params = {}) => {
   return response;
 };
 
-const makeGetRequest = async (endpoint) => {
-  return makeRequest('get', endpoint);
+const makeGetRequest = async () => {
+  return makeRequest('get');
 };
 
-const makePostRequest = async (endpoint, body = {}) => {
-  return makeRequest('post', endpoint, body);
+const makePostRequest = async (params = {}) => {
+  return makeRequest('post',"", params);
 };
 
 

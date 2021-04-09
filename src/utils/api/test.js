@@ -1,7 +1,9 @@
-import { makeGetRequest } from './besttime.js';
-
+import { makeGetRequest, makePostRequest} from './base.js';
+const ENDPOINT ='users'
 const getTest = async () => {
   return makeGetRequest('');
 };
-
-export { getTest };
+const postTest = async (body) => {
+  return makePostRequest(ENDPOINT,body);
+};
+export { getTest, postTest };

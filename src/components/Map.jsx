@@ -2,9 +2,9 @@ import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 import { Box} from '@material-ui/core';
-import {useDisclosure} from '@chakra-ui/react';
+import {useDisclosure, Button} from '@chakra-ui/react';
 import LocationInfo from "./LocationInfo"
-
+import {makePostRequest} from '../utils/api/besttime'; 
 
 const Map = () => {
   const accessToken =
@@ -15,7 +15,7 @@ const Map = () => {
     zoom: 8,
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+
   const mapRef = useRef();
 
   const handleViewportChange = useCallback(
@@ -33,12 +33,33 @@ const Map = () => {
     },
     [handleViewportChange]
   );
+  let bestTimesData = "";
 
+  
+const apiTest = async() => {
+  const response = await makePostRequest({
+    api_key_private:"pri_7b5f18965b7d46a5b708eeee58fc2354",
+    venue_address: locationAddress,
+    venue_name: locationName
+  });
+  bestTimesData = response?.data?.analysis?.[0]?.quiet_hours;
+  console.log('Quiet Hours: ', response?.data?.quiet_hours);
+  console.log('json response: ', response);
+  console.log('json data: ', response?.data);
+  console.log('json analysis: ', response?.data?.analysis);
+  console.log('json array 0: ', response?.data?.analysis?.[0]);
+  console.log('json quiet hours: ', response?.data?.analysis?.[0]?.quiet_hours);
+  onOpen();
+}
  const test2 = useRef("");
- console.log("test33333333: ", test2?.current?.cachedResult?.place_name);
+ const locationName = test2?.current?.cachedResult?.place_name.slice(0, test2?.current?.cachedResult?.place_name.indexOf(','));
+ const locationAddress = test2?.current?.cachedResult?.place_name.substring(test2?.current?.cachedResult?.place_name.indexOf(",")+1);
+//  console.log("Location:", locationName);
+//  console.log("Location Address:", locationAddress);
 
   return (
     <Box height="100%" width="100%" position="absolute">
+              <Button onClick={apiTest} >Get Busy Data</Button>
       <ReactMapGL
         ref={mapRef}
         {...viewport}
@@ -48,7 +69,7 @@ const Map = () => {
         mapboxApiAccessToken={accessToken}
         mapStyle="mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1"
         onViewportChange={handleViewportChange}
-        onTransitionStart={onOpen}
+        onTransitionEnd={apiTest}
       >
         <Geocoder
           mapRef={mapRef}
@@ -60,7 +81,8 @@ const Map = () => {
         />
       </ReactMapGL>
       <div>
-        <LocationInfo isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
+        <LocationInfo isOpen={isOpen} onOpen={onOpen} onClose={onClose} locationAddress={locationAddress} locationName={locationName} bestTimeData = {bestTimesData}/>
+
       </div> 
     </Box>
   );

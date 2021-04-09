@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = "https://api.mocki.io/v1/b043df5a";
+const apiUrl = "https://reqres.in/api";
 
 const makeRequest = async (method, endpoint, body = {}, params = {}) => {
   const options = {

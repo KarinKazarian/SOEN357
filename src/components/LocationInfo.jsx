@@ -1,6 +1,7 @@
 import { Modal ,Box} from '@material-ui/core';
-import { styled } from '@material-ui/core/styles'; 
-const LocationInfo = ({isOpen, onOpen, onClose}) => {
+import { styled } from '@material-ui/core/styles';
+
+const LocationInfo = ({isOpen, onOpen, onClose, locationAddress, locationName, bestTimeData}) => {
   
   const LocationModal = styled(Box)({
     width: 300,
@@ -23,7 +24,7 @@ return (
   disableEnforceFocus
   onClose={onClose}
 >
-  <LocationModal autoFocus={false}>hello</LocationModal>
+  <LocationModal autoFocus={false}>{locationName}{locationAddress}{bestTimeData}</LocationModal>
 </Modal>
 );
 };
