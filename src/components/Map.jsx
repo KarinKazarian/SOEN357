@@ -1,12 +1,36 @@
 import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
-import { Box} from '@material-ui/core';
-import {useDisclosure, Button} from '@chakra-ui/react';
-import LocationInfo from "./LocationInfo"
-import {makePostRequest} from '../utils/api/besttime'; 
+import { Box } from '@material-ui/core';
+import { useDisclosure } from '@chakra-ui/react';
+import LocationInfo from './LocationInfo';
+// import { makePostRequest } from '../utils/api/besttime';
 
 const Map = () => {
+  const testData = [
+    {
+      name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
+    },
+    {
+      name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
+    },
+    {
+      name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
+    },
+    {
+      name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
+    },
+    {
+      name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
+    },
+    {
+      name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
+    },
+    {
+      name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
+    },
+  ];
+
   const accessToken =
     'pk.eyJ1Ijoia2FyaW4ta2F6YXJpYW4iLCJhIjoiY2tteWVjMnFpMDM4MTJubWYycTJ5N3Q5ZCJ9.Of9brpnQ8Oc-LGZ6P1ArrA';
   const [viewport, setViewport] = useState({
@@ -15,7 +39,7 @@ const Map = () => {
     zoom: 8,
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  // const [bestTimesDataString, setBestTimesDataString] = useState('');
   const mapRef = useRef();
 
   const handleViewportChange = useCallback(
@@ -33,33 +57,29 @@ const Map = () => {
     },
     [handleViewportChange]
   );
-  let bestTimesData = "";
 
-  
-const apiTest = async() => {
-  const response = await makePostRequest({
-    api_key_private:"pri_7b5f18965b7d46a5b708eeee58fc2354",
-    venue_address: locationAddress,
-    venue_name: locationName
-  });
-  bestTimesData = response?.data?.analysis?.[0]?.quiet_hours;
-  console.log('Quiet Hours: ', response?.data?.quiet_hours);
-  console.log('json response: ', response);
-  console.log('json data: ', response?.data);
-  console.log('json analysis: ', response?.data?.analysis);
-  console.log('json array 0: ', response?.data?.analysis?.[0]);
-  console.log('json quiet hours: ', response?.data?.analysis?.[0]?.quiet_hours);
-  onOpen();
-}
- const test2 = useRef("");
- const locationName = test2?.current?.cachedResult?.place_name.slice(0, test2?.current?.cachedResult?.place_name.indexOf(','));
- const locationAddress = test2?.current?.cachedResult?.place_name.substring(test2?.current?.cachedResult?.place_name.indexOf(",")+1);
-//  console.log("Location:", locationName);
-//  console.log("Location Address:", locationAddress);
+  const apiTest = async () => {
+    // const response = await makePostRequest({
+    //   api_key_private:"pri_7b5f18965b7d46a5b708eeee58fc2354",
+    //   venue_address: locationAddress,
+    //   venue_name: locationName
+    // });
+    // let bestTimesData = response?.data?.analysis?.[0]?.quiet_hours;
+    // let bestTimesDataString = JSON.stringify(bestTimesData);
+    // console.log('Quiet Hours: ', bestTimesDataString);
+    // console.log('json response: ', response);
+    // console.log('json quiet hours: ', response?.data?.analysis?.[0]?.quiet_hours);
+    // setBestTimesDataString('[6,20,21,22,23,0]');
+    onOpen();
+  };
+  const test2 = useRef('');
+  //  const locationName = test2?.current?.cachedResult?.place_name.slice(0, test2?.current?.cachedResult?.place_name.indexOf(','));
+  //  const locationAddress = test2?.current?.cachedResult?.place_name.substring(test2?.current?.cachedResult?.place_name.indexOf(",")+1);
+  //  console.log("Location:", locationName);
+  //  console.log("Location Address:", locationAddress);
 
   return (
     <Box height="100%" width="100%" position="absolute">
-              <Button onClick={apiTest} >Get Busy Data</Button>
       <ReactMapGL
         ref={mapRef}
         {...viewport}
@@ -81,9 +101,13 @@ const apiTest = async() => {
         />
       </ReactMapGL>
       <div>
-        <LocationInfo isOpen={isOpen} onOpen={onOpen} onClose={onClose} locationAddress={locationAddress} locationName={locationName} bestTimeData = {bestTimesData}/>
-
-      </div> 
+        <LocationInfo
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+          bestTimeData={testData}
+        />
+      </div>
     </Box>
   );
 };
