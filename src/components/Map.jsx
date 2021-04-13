@@ -2,12 +2,12 @@ import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 //import { Box } from '@material-ui/core';
-import { useDisclosure, HStack, Box, Link } from '@chakra-ui/react';
+import { useDisclosure, HStack, Box, Link, Center } from '@chakra-ui/react';
 import LocationInfo from './LocationInfo';
 // import { makePostRequest } from '../utils/api/besttime';
 import { FaWarehouse } from 'react-icons/fa';
-
-const Map = React.memo(() => {
+import styled from '@emotion/styled';
+const Map = () => {
   const testData = [
     {
       name: 'Page A',
@@ -60,8 +60,7 @@ const Map = React.memo(() => {
   const accessToken =
     'pk.eyJ1Ijoia2FyaW4ta2F6YXJpYW4iLCJhIjoiY2tteWVjMnFpMDM4MTJubWYycTJ5N3Q5ZCJ9.Of9brpnQ8Oc-LGZ6P1ArrA';
   const [viewport, setViewport] = useState({
-    width: '100%',
-    height: '100vh',
+    height: '89vh',
     latitude: 45.4644455,
     longitude: -73.745181,
     zoom: 8,
@@ -101,54 +100,59 @@ const Map = React.memo(() => {
     // console.log('json quiet hours: ', response?.data?.analysis?.[0]?.quiet_hours);
     // setBestTimesDataString('[6,20,21,22,23,0]');
     //onToggle();
-    console.log("hello");
+    console.log('hello');
   };
   const test2 = useRef('');
   //  const locationName = test2?.current?.cachedResult?.place_name.slice(0, test2?.current?.cachedResult?.place_name.indexOf(','));
   //  const locationAddress = test2?.current?.cachedResult?.place_name.substring(test2?.current?.cachedResult?.place_name.indexOf(",")+1);
   //  console.log("Location:", locationName);
   //  console.log("Location Address:", locationAddress);
-
-  const mystyle = {
-    height: 50,
-    background: 'black',
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: 4,
-    position: 'absolute',
-  };
-
+  const StyledBox = styled(Box)`
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 20px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    display: inline-block;
+  `;
   return (
     <>
-      <HStack spacing='2px' position='relative'>
-        <Box alignSelf='baseline' w='30%' resize='horizontal' overflow='auto'>
-          <div
-            ref={geocoderContainerRef}
-            style={{
-              height: 50,
-
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: 4,
-            }}
-          />
+      <HStack spacing='5px'>
+        <StyledBox
+          alignSelf='baseline'
+          w='30%'
+          resize='horizontal'
+          overflow='auto'
+        >
+          <Center>
+            <div
+              ref={geocoderContainerRef}
+              style={{
+                height: 50,
+                display: 'flex',
+                alignItems: 'center',
+                paddingLeft: 4,
+              }}
+            />
+          </Center>
           <LocationInfo
-            isOpen={isOpen}
+            // isOpen={isOpen}
             // onOpen={onOpen}
             // onClose={onClose}
-            onToggle={onToggle}
+            // onToggle={onToggle}
             bestTimeData={testData}
+            // position='relative'
           />
-        </Box>
-        {/* <Box h='1000px' w='100%' position='absolute'> */}
+        </StyledBox>
 
         <Box w='90%'>
           <ReactMapGL
             ref={mapRef}
             {...viewport}
-            position='absolute'
-            top={0}
-            bottom={0}
+            // position='absolute'
+            // top={0}
+            // bottom={0}
             width='100%'
             mapboxApiAccessToken={accessToken}
             mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
@@ -161,12 +165,12 @@ const Map = React.memo(() => {
               ref={test2}
               onViewportChange={handleGeocoderViewportChange}
               mapboxApiAccessToken={accessToken}
-              width='100%'
-              position='top-left'
-              marker={false}
+              // width='100%'
+              // position='top-left'
+              // marker={true}
               onResult={apiTest}
             />
-            <Link
+            {/* <Link
               onClick={() => {
                 onToggle();
                 console.log('dead');
@@ -180,12 +184,12 @@ const Map = React.memo(() => {
               >
                 <FaWarehouse />
               </Marker>
-            </Link>
+            </Link> */}
           </ReactMapGL>
         </Box>
       </HStack>
     </>
   );
-});
+};
 
 export default Map;
