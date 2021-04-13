@@ -101,6 +101,7 @@ const Map = React.memo(() => {
     // console.log('json quiet hours: ', response?.data?.analysis?.[0]?.quiet_hours);
     // setBestTimesDataString('[6,20,21,22,23,0]');
     //onToggle();
+    console.log("hello");
   };
   const test2 = useRef('');
   //  const locationName = test2?.current?.cachedResult?.place_name.slice(0, test2?.current?.cachedResult?.place_name.indexOf(','));
@@ -163,6 +164,7 @@ const Map = React.memo(() => {
               width='100%'
               position='top-left'
               marker={false}
+              onResult={apiTest}
             />
             <Link
               onClick={() => {
