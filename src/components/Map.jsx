@@ -7,6 +7,7 @@ import LocationInfo from './LocationInfo';
 import { makePostRequest, makePostRequestLive } from '../utils/api/besttime';
 import { FaWarehouse } from 'react-icons/fa';
 import styled from '@emotion/styled';
+import useWindowSize from '../hooks/useWindowSize';
 
 const StyledBox = styled(Box)`
   background: rgba(255, 255, 255, 0.25);
@@ -19,6 +20,8 @@ const StyledBox = styled(Box)`
 `;
 
 const Map = () => {
+  const windowSize = useWindowSize();
+
   const hq = {
     longitude: -73.745181,
     latitude: 45.4644455,
@@ -28,7 +31,6 @@ const Map = () => {
     'pk.eyJ1Ijoia2FyaW4ta2F6YXJpYW4iLCJhIjoiY2tteWVjMnFpMDM4MTJubWYycTJ5N3Q5ZCJ9.Of9brpnQ8Oc-LGZ6P1ArrA';
 
   const [viewport, setViewport] = useState({
-    height: '89vh',
     latitude: 45.4644455,
     longitude: -73.745181,
     zoom: 8,
@@ -113,6 +115,7 @@ const Map = () => {
           w='35%'
           resize='horizontal'
           overflow='auto'
+          h={windowSize.height * 0.86}
         >
           <Center>
             <div
@@ -128,13 +131,11 @@ const Map = () => {
           <LocationInfo liveData={liveData} bestTimeData={bestTimesData} />
         </StyledBox>
 
-        <Box w='90%'>
+        <Box w='90%' h={windowSize.height * 0.86}>
           <ReactMapGL
             ref={mapRef}
             {...viewport}
-            // position='absolute'
-            // top={0}
-            // bottom={0}
+            height='100%'
             width='100%'
             mapboxApiAccessToken={accessToken}
             mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
