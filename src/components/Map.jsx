@@ -8,33 +8,17 @@ import { makePostRequest, makePostRequestLive } from '../utils/api/besttime';
 import { FaWarehouse } from 'react-icons/fa';
 import styled from '@emotion/styled';
 
+const StyledBox = styled(Box)`
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 20px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: inline-block;
+`;
+
 const Map = () => {
-  const testData = [
-    10,
-    25,
-    40,
-    55,
-    65,
-    75,
-    75,
-    75,
-    75,
-    75,
-    70,
-    65,
-    50,
-    40,
-    30,
-    25,
-    25,
-    25,
-    20,
-    15,
-    10,
-    0,
-    5,
-    5,
-  ];
   const hq = {
     longitude: -73.745181,
     latitude: 45.4644455,
@@ -49,11 +33,12 @@ const Map = () => {
     longitude: -73.745181,
     zoom: 8,
   });
+
   const [liveData, setLiveData] = useState(20);
   const [bestTimesData, setBestTimesData] = useState('');
   const mapRef = useRef();
   const geocoderContainerRef = useRef();
-  const test2 = useRef('');
+  const location = useRef('');
   const toast = useToast();
 
   const handleViewportChange = useCallback(
@@ -110,27 +95,15 @@ const Map = () => {
   };
 
   const getParams = () => {
-    const locationName = test2?.current?.cachedResult?.place_name.slice(
+    const locationName = location?.current?.cachedResult?.place_name.slice(
       0,
-      test2?.current?.cachedResult?.place_name.indexOf(',')
+      location?.current?.cachedResult?.place_name.indexOf(',')
     );
-    const locationAddress = test2?.current?.cachedResult?.place_name.substring(
-      test2?.current?.cachedResult?.place_name.indexOf(',') + 1
+    const locationAddress = location?.current?.cachedResult?.place_name.substring(
+      location?.current?.cachedResult?.place_name.indexOf(',') + 1
     );
-    console.log('Location:', locationName);
-    console.log('Location Address:', locationAddress);
     return { locationName, locationAddress };
   };
-
-  const StyledBox = styled(Box)`
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 20px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    display: inline-block;
-  `;
 
   return (
     <>
@@ -171,7 +144,7 @@ const Map = () => {
             <Geocoder
               mapRef={mapRef}
               containerRef={geocoderContainerRef}
-              ref={test2}
+              ref={location}
               onViewportChange={handleGeocoderViewportChange}
               mapboxApiAccessToken={accessToken}
               // width='100%'
