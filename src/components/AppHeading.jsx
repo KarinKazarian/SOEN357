@@ -33,7 +33,7 @@ const AppHeading = () => {
     <>
       <StyledHeadingWrapper height={windowSize.height * 0.03}>
         <StyledHeading>Time Saver </StyledHeading>
-        <Image src={Logo} alt='time logo' height={windowSize.height * 0.1} />
+        <Image src={Logo} alt='time logo' height={43 * 1.5} />
       </StyledHeadingWrapper>
     </>
   );

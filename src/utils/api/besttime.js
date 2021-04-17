@@ -19,7 +19,7 @@ const makeGetRequest = async () => {
 };
 
 const makePostRequest = async (params = {}) => {
-  return makeRequest('post', '', params);
+  return makeRequest('post', '', params, '');
 };
 
 const makePostRequestLive = async (params = {}) => {

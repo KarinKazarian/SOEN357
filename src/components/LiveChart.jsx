@@ -8,16 +8,15 @@ import {
 
 const LiveChart = ({ data }) => {
   const windowSize = useWindowSize();
+
   return (
     <>
-      <ResponsiveContainer width='100%' height='100%' aspect={1.5}>
+      <ResponsiveContainer width='70%' height='70%' aspect={1.5}>
         <RadialBarChart
-          // width={windowSize.width}
-          // height={windowSize.height}
-          cx='50%'
+          cx='70%'
           cy='50%'
-          innerRadius={windowSize.width / 12}
-          outerRadius={windowSize.width / 5}
+          innerRadius='90%'
+          outerRadius='100%'
           barSize={3}
           data={data}
           startAngle={230}
@@ -32,18 +31,18 @@ const LiveChart = ({ data }) => {
           <RadialBar
             background
             clockWise
-            dataKey='uv'
+            dataKey='live'
             cornerRadius={windowSize.width / 8}
             fill='#82ca9d'
           />
           <text
-            x='50%'
+            x='70%'
             y='50%'
             textAnchor='middle'
             dominantBaseline='middle'
             className='progress-label'
           >
-            {data.value}%
+            {data[0].live}%
           </text>
         </RadialBarChart>
       </ResponsiveContainer>

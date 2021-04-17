@@ -1,7 +1,5 @@
-import { Modal, Box } from '@material-ui/core';
-//import { styled } from '@material-ui/core/styles';
-import useWindowSize from '../hooks/useWindowSize';
-import { VStack, Center } from '@chakra-ui/react';
+import { Box } from '@material-ui/core';
+import { VStack, Center, Link, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import React, { useState, useEffect } from 'react';
 import LiveChart from './LiveChart';
@@ -17,34 +15,37 @@ const StyledBox = styled(Box)`
   display: inline-block;
 `;
 
-const LocationInfo = ({ bestTimeData, liveData }) => {
-  console.log('live: ', liveData);
-  const data = [{ uv: liveData, fill: '#8884d8' }];
-  const [barChartData, setBarChartData] = useState([]);
+const LocationInfo = ({ liveData, buynessData }) => {
+  const liveDataArray = [{ live: liveData, fill: '#8884d8' }];
+  const [buynessDataArray, setBuynessDataArray] = useState([]);
 
   useEffect(() => {
-    console.log('bestTiem data: ', bestTimeData);
-    if (bestTimeData != null && bestTimeData.length !== 0) {
-      let data = [];
-      for (let i = 0; i < 24; i++) {
-        data.push({ hour: i, busyness: bestTimeData[i] });
-      }
-      setBarChartData(data);
+    if (buynessData != null && buynessData.length !== 0) {
+      const temp = [];
+      buynessData.map((day) => {
+        temp[day.day_info.day_int] = day.day_raw;
+      });
+      setBuynessDataArray(temp);
     }
-  }, [bestTimeData]);
+  }, [buynessData]);
 
   return (
     <>
-      <VStack spacing='24px'>
-        <StyledBox width='100%' height='100%'>
+      <VStack spacing='18px' height='50%'>
+        <StyledBox width='100%'>
           <Center>Live Traffic</Center>
-          <LiveChart data={data} />
+          <LiveChart data={liveDataArray} />
         </StyledBox>
 
-        <StyledBox width='100%' height='100%' paddingBottom='20px'>
+        <StyledBox width='100%' paddingBottom='20px' paddingRight='15px'>
           <Center>Busy Hours</Center>
-          <BusyHoursChart data={barChartData} />
+          <BusyHoursChart data={buynessDataArray} />
         </StyledBox>
+        <Box>
+          <Text fontSize='xs'>
+            Data Taken From: <Link>https://besttime.app/</Link>
+          </Text>
+        </Box>
       </VStack>
     </>
   );

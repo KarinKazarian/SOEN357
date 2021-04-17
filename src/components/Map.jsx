@@ -1,8 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
-//import { Box } from '@material-ui/core';
-import { useDisclosure, HStack, Box, useToast, Center } from '@chakra-ui/react';
+import { HStack, Box, useToast, Center } from '@chakra-ui/react';
 import LocationInfo from './LocationInfo';
 import { makePostRequest, makePostRequestLive } from '../utils/api/besttime';
 import { FaWarehouse } from 'react-icons/fa';
@@ -21,6 +20,122 @@ const StyledBox = styled(Box)`
 
 const Map = () => {
   const windowSize = useWindowSize();
+  const testData = [
+    {
+      day_info: {
+        day_int: 0,
+        day_rank_max: 6,
+        day_rank_mean: 4,
+        day_text: 'Monday',
+        venue_closed: 6,
+        venue_open: 23,
+      },
+      day_raw: [
+        10,
+        25,
+        40,
+        55,
+        65,
+        75,
+        75,
+        75,
+        75,
+        75,
+        70,
+        65,
+        50,
+        40,
+        30,
+        25,
+        25,
+        25,
+        20,
+        15,
+        10,
+        0,
+        5,
+        5,
+      ],
+      hour_analysis: [
+        {
+          hour: 6,
+          intensity_nr: -1,
+          intensity_txt: 'Below average',
+        },
+      ],
+      peak_hours: [
+        {
+          peak_start: 8,
+          peak_max: 11,
+          peak_end: 23,
+          peak_intensity: 4,
+        },
+      ],
+      quiet_hours: [6, 1, 2, 3],
+      busy_hours: [9, 10, 11, 12],
+      surge_hours: {
+        most_people_come: 8,
+        most_people_leave: 22,
+      },
+    },
+    {
+      day_info: {
+        day_int: 1,
+        day_rank_max: 6,
+        day_rank_mean: 4,
+        day_text: 'Monday',
+        venue_closed: 6,
+        venue_open: 23,
+      },
+      day_raw: [
+        30,
+        100,
+        100,
+        55,
+        65,
+        5,
+        35,
+        7,
+        45,
+        45,
+        60,
+        65,
+        0,
+        40,
+        30,
+        25,
+        25,
+        25,
+        20,
+        15,
+        10,
+        0,
+        5,
+        5,
+      ],
+      hour_analysis: [
+        {
+          hour: 6,
+          intensity_nr: -1,
+          intensity_txt: 'Below average',
+        },
+      ],
+      peak_hours: [
+        {
+          peak_start: 8,
+          peak_max: 11,
+          peak_end: 23,
+          peak_intensity: 4,
+        },
+      ],
+      quiet_hours: [6, 1, 2, 3],
+      busy_hours: [9, 10, 11, 12],
+      surge_hours: {
+        most_people_come: 8,
+        most_people_leave: 22,
+      },
+    },
+  ];
 
   const hq = {
     longitude: -73.745181,
@@ -36,11 +151,10 @@ const Map = () => {
     zoom: 8,
   });
 
-  const [liveData, setLiveData] = useState(20);
-  const [bestTimesData, setBestTimesData] = useState('');
+  const [liveData, setLiveData] = useState(0);
+  const [buynessData, setBuynessData] = useState({});
   const mapRef = useRef();
   const geocoderContainerRef = useRef();
-  const location = useRef('');
   const toast = useToast();
 
   const handleViewportChange = useCallback(
@@ -59,52 +173,74 @@ const Map = () => {
     [handleViewportChange]
   );
 
-  const apiTest = async () => {
-    const { locationName, locationAddress } = getParams();
-    const today = new Date().getDay();
-    const todayBestTimes = today == 0 ? 6 : today - 1;
-    console.log(':today: ', todayBestTimes);
-    // const response = await makePostRequest({
-    //   api_key_private: 'pri_7b5f18965b7d46a5b708eeee58fc2354',
-    //   venue_address: locationAddress,
-    //   venue_name: locationName,
-    // });
-    // let bestTimesData = response?.data?.analysis?.[todayBestTimes]?.day_raw;
-    // setBestTimesData(bestTimesData);
-
-    // try {
-    //   var liveResponse = await makePostRequestLive({
-    //     api_key_private: 'pri_7b5f18965b7d46a5b708eeee58fc2354',
-    //     venue_address: locationAddress,
-    //     venue_name: locationName,
-    //   });
-    //   console.log('liveResponse: ', liveResponse);
-    //   if (liveResponse.data.status !== 'Error') {
-    //     liveResponse = liveResponse?.analysis?.venue_live_busyness;
-    //     setLiveData(liveResponse);
-    //   } else {
-    //     throw liveResponse.data.message;
-    //   }
-    // } catch (err) {
-    //   toast({
-    //     title: 'Error',
-    //     description: err.message,
-    //     status: 'error',
-    //     duration: 5000,
-    //     isClosable: true,
-    //   });
-    // }
+  const requestLiveData = async (locationName, locationAddress) => {
+    try {
+      var response = await makePostRequestLive({
+        api_key_private: 'pri_7b5f18965b7d46a5b708eeee58fc2354',
+        venue_address: locationAddress,
+        venue_name: locationName,
+      });
+      console.log('liveResponse: ', response);
+      if (response.data.status !== 'Error') {
+        const busyness = response?.data.analysis?.venue_live_busyness;
+        setLiveData(busyness);
+      } else {
+        throw response.data;
+      }
+    } catch (err) {
+      setLiveData(0);
+      toast({
+        title: 'Error',
+        description: err.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
-  const getParams = () => {
-    const locationName = location?.current?.cachedResult?.place_name.slice(
-      0,
-      location?.current?.cachedResult?.place_name.indexOf(',')
-    );
-    const locationAddress = location?.current?.cachedResult?.place_name.substring(
-      location?.current?.cachedResult?.place_name.indexOf(',') + 1
-    );
-    return { locationName, locationAddress };
+  const requestBusynessData = async (locationName, locationAddress) => {
+    try {
+      const response = await makePostRequest({
+        api_key_private: 'pri_7b5f18965b7d46a5b708eeee58fc2354',
+        venue_address: locationAddress,
+        venue_name: locationName,
+      });
+      if (response.data.status !== 'Error') {
+        const rawData = response?.data?.analysis;
+        setBuynessData(rawData);
+      } else {
+        throw response.data;
+      }
+    } catch (err) {
+      setLiveData(0);
+      toast({
+        title: 'Error',
+        description: err.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const requestData = async (results) => {
+    const [locationName, locationAddress] = getParams(results);
+    if (!locationName || !locationAddress) return;
+    //requestBusynessData(locationName, locationAddress);
+    //requestLiveData(locationName, locationAddress);
+  };
+
+  const getParams = (results) => {
+    const placeName = results.result.place_name;
+    if (placeName != null) {
+      const locationName = placeName.slice(0, placeName.indexOf(','));
+      const locationAddress = placeName.substring(placeName.indexOf(',') + 1);
+      console.log('in the if');
+      return [locationName, locationAddress];
+    }
+    console.log('out of the if');
+    return ['', ''];
   };
 
   return (
@@ -114,8 +250,8 @@ const Map = () => {
           alignSelf='baseline'
           w='35%'
           resize='horizontal'
-          overflow='auto'
-          h={windowSize.height * 0.86}
+          overflow='scroll'
+          h={windowSize.height - 96}
         >
           <Center>
             <div
@@ -128,10 +264,10 @@ const Map = () => {
               }}
             />
           </Center>
-          <LocationInfo liveData={liveData} bestTimeData={bestTimesData} />
+          <LocationInfo liveData={liveData} buynessData={testData} />
         </StyledBox>
 
-        <Box w='90%' h={windowSize.height * 0.86}>
+        <Box w='90%' h={windowSize.height - 96}>
           <ReactMapGL
             ref={mapRef}
             {...viewport}
@@ -140,18 +276,14 @@ const Map = () => {
             mapboxApiAccessToken={accessToken}
             mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
             onViewportChange={handleViewportChange}
-            onTransitionEnd={apiTest}
+            //onTransitionEnd={apiTest}
           >
             <Geocoder
               mapRef={mapRef}
               containerRef={geocoderContainerRef}
-              ref={location}
               onViewportChange={handleGeocoderViewportChange}
               mapboxApiAccessToken={accessToken}
-              // width='100%'
-              // position='top-left'
-              // marker={true}
-              onResult={apiTest}
+              onResult={requestData}
             />
             {/* <Link
               onClick={() => {
