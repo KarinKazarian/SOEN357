@@ -1,6 +1,7 @@
-import { Heading, Center } from '@chakra-ui/react';
+import { Heading, Center, Image } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import useWindowSize from '../hooks/useWindowSize';
+import Logo from '../images/logo.png';
 
 const StyledHeading = styled(Heading)`
   font-family: Verdana, Geneva, sans-serif;
@@ -31,7 +32,8 @@ const AppHeading = () => {
   return (
     <>
       <StyledHeadingWrapper height={windowSize.height * 0.03}>
-        <StyledHeading>Traffic App</StyledHeading>
+        <StyledHeading>Time Saver </StyledHeading>
+        <Image src={Logo} alt='time logo' height={windowSize.height * 0.1} />
       </StyledHeadingWrapper>
     </>
   );
