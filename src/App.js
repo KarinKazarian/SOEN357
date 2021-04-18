@@ -1,9 +1,12 @@
 import Map from './components/Map.jsx';
+import { Divider } from '@chakra-ui/react';
+import AppHeading from './components/AppHeading.jsx';
 
 const App = () => {
   return (
     <div className='App'>
-      <h1>Traffic App</h1>
+      <AppHeading />
+      <Divider />
       <Map />
     </div>
   );
