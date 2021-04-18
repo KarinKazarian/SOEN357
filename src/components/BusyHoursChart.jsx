@@ -92,7 +92,12 @@ const BusyHoursChart = ({ data }) => {
           </MenuList>
         </Menu>
       </Center>
-      <ResponsiveContainer width='100%' height='90%' aspect={2}>
+      <ResponsiveContainer
+        width='100%'
+        //style={{ height: `calc(100% -80px)` }}
+        height='auto'
+        aspect={2}
+      >
         <BarChart width={500} height={400} data={dataForChart}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis

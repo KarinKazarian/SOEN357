@@ -11,7 +11,7 @@ const LiveChart = ({ data }) => {
 
   return (
     <>
-      <ResponsiveContainer width='70%' height='70%' aspect={1.5}>
+      <ResponsiveContainer width='70%' height='auto' aspect={1.5}>
         <RadialBarChart
           cx='70%'
           cy='50%'
