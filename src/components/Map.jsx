@@ -1,11 +1,13 @@
 import React, { useState, useRef, useCallback } from 'react';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 import { HStack, Box, useToast, Center } from '@chakra-ui/react';
 import LocationInfo from './LocationInfo';
 import { makePostRequest, makePostRequestLive } from '../utils/api/besttime';
 import styled from '@emotion/styled';
 import useWindowSize from '../hooks/useWindowSize';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import { Icon } from '@chakra-ui/react';
 
 const StyledBox = styled(Box)`
   background: rgba(255, 255, 255, 0.25);
@@ -28,7 +30,10 @@ const Map = () => {
     longitude: -73.745181,
     zoom: 8,
   });
-
+  const [locationCoordinates, setLocationCoordinates] = useState({
+    latitude: 45.4644455,
+    longitude: -73.745181,
+  });
   const [liveData, setLiveData] = useState(0);
   const [buynessData, setBuynessData] = useState([]);
   const mapRef = useRef();
@@ -107,6 +112,10 @@ const Map = () => {
     if (!locationName || !locationAddress) return;
     requestBusynessData(locationName, locationAddress);
     requestLiveData(locationName, locationAddress);
+    setLocationCoordinates({
+      longitude: results.result.center?.[0],
+      latitude: results.result.center?.[1],
+    });
   };
 
   const getParams = (results) => {
@@ -121,12 +130,12 @@ const Map = () => {
 
   return (
     <>
-      <HStack spacing='5px'>
+      <HStack spacing="5px">
         <StyledBox
-          alignSelf='baseline'
-          w='35%'
-          resize='horizontal'
-          overflow='scroll'
+          alignSelf="baseline"
+          w="35%"
+          resize="horizontal"
+          overflow="scroll"
           h={windowSize.height - 96}
         >
           <Center>
@@ -143,17 +152,22 @@ const Map = () => {
           <LocationInfo liveData={liveData} buynessData={buynessData} />
         </StyledBox>
 
-        <Box w='90%' h={windowSize.height - 96}>
+        <Box w="90%" h={windowSize.height - 96}>
           <ReactMapGL
             ref={mapRef}
             {...viewport}
-            height='100%'
-            width='100%'
+            height="100%"
+            width="100%"
             mapboxApiAccessToken={accessToken}
-            mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
+            mapStyle="mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1"
             onViewportChange={handleViewportChange}
-            //onTransitionEnd={apiTest}
           >
+            <Marker
+              latitude={locationCoordinates.latitude}
+              longitude={locationCoordinates.longitude}
+            >
+              <Icon color="black" as={FaMapMarkerAlt} w={8} h={8} />
+            </Marker>
             <Geocoder
               mapRef={mapRef}
               containerRef={geocoderContainerRef}
