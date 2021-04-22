@@ -37,11 +37,16 @@ const BusyHoursChart = ({ data }) => {
   const [day, setDay] = useState(getToday);
   const [dataForChart, setDataForChart] = useState();
 
+  //prepare the data for the bar chart
   useEffect(() => {
     if (data != null && data.length !== 0 && data[day] != null) {
       let temp = [];
-      for (let i = 0; i < data[day].length; i++) {
-        temp.push({ hour: i, busyness: data[day][i] });
+      for (let i = 0; i < 24; i++) {
+        if (i < 6) {
+          temp.push({ hour: i, busyness: data[day][i + 18] });
+        } else {
+          temp.push({ hour: i, busyness: data[day][i - 6] });
+        }
       }
       setDataForChart(temp);
     } else {

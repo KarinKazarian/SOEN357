@@ -56,6 +56,7 @@ const Map = () => {
     [handleViewportChange]
   );
 
+  //sends a request to BestTimes to get live data
   const requestLiveData = async (locationName, locationAddress) => {
     try {
       var response = await makePostRequestLive({
@@ -81,6 +82,7 @@ const Map = () => {
     }
   };
 
+  //sends a request to BestTimes to get busyness data
   const requestBusynessData = async (locationName, locationAddress) => {
     try {
       const response = await makePostRequest({
@@ -107,6 +109,7 @@ const Map = () => {
     }
   };
 
+  //calls methods that request buyness and live data
   const requestData = async (results) => {
     const [locationName, locationAddress] = getParams(results);
     if (!locationName || !locationAddress) return;
@@ -118,6 +121,7 @@ const Map = () => {
     });
   };
 
+  //returns an array of location name and address
   const getParams = (results) => {
     const placeName = results.result.place_name;
     if (placeName != null) {
@@ -130,12 +134,12 @@ const Map = () => {
 
   return (
     <>
-      <HStack spacing="5px">
+      <HStack spacing='5px'>
         <StyledBox
-          alignSelf="baseline"
-          w="35%"
-          resize="horizontal"
-          overflow="scroll"
+          alignSelf='baseline'
+          w='35%'
+          resize='horizontal'
+          overflow='scroll'
           h={windowSize.height - 96}
         >
           <Center>
@@ -152,21 +156,21 @@ const Map = () => {
           <LocationInfo liveData={liveData} buynessData={buynessData} />
         </StyledBox>
 
-        <Box w="90%" h={windowSize.height - 96}>
+        <Box w='90%' h={windowSize.height - 96}>
           <ReactMapGL
             ref={mapRef}
             {...viewport}
-            height="100%"
-            width="100%"
+            height='100%'
+            width='100%'
             mapboxApiAccessToken={accessToken}
-            mapStyle="mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1"
+            mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
             onViewportChange={handleViewportChange}
           >
             <Marker
               latitude={locationCoordinates.latitude}
               longitude={locationCoordinates.longitude}
             >
-              <Icon color="black" as={FaMapMarkerAlt} w={8} h={8} />
+              <Icon color='black' as={FaMapMarkerAlt} w={8} h={8} />
             </Marker>
             <Geocoder
               mapRef={mapRef}
