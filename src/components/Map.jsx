@@ -1,11 +1,13 @@
 import React, { useState, useRef, useCallback } from 'react';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 import { HStack, Box, useToast, Center } from '@chakra-ui/react';
 import LocationInfo from './LocationInfo';
 import { makePostRequest, makePostRequestLive } from '../utils/api/besttime';
 import styled from '@emotion/styled';
 import useWindowSize from '../hooks/useWindowSize';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+import { Icon } from '@chakra-ui/react';
 
 const StyledBox = styled(Box)`
   background: rgba(255, 255, 255, 0.25);
@@ -28,7 +30,10 @@ const Map = () => {
     longitude: -73.745181,
     zoom: 8,
   });
-
+  const [locationCoordinates, setLocationCoordinates] = useState({
+    latitude: 45.4644455,
+    longitude: -73.745181,
+  });
   const [liveData, setLiveData] = useState(0);
   const [buynessData, setBuynessData] = useState([]);
   const mapRef = useRef();
@@ -51,6 +56,7 @@ const Map = () => {
     [handleViewportChange]
   );
 
+  //sends a request to BestTimes to get live data
   const requestLiveData = async (locationName, locationAddress) => {
     try {
       var response = await makePostRequestLive({
@@ -76,6 +82,7 @@ const Map = () => {
     }
   };
 
+  //sends a request to BestTimes to get busyness data
   const requestBusynessData = async (locationName, locationAddress) => {
     try {
       const response = await makePostRequest({
@@ -102,13 +109,19 @@ const Map = () => {
     }
   };
 
+  //calls methods that request buyness and live data
   const requestData = async (results) => {
     const [locationName, locationAddress] = getParams(results);
     if (!locationName || !locationAddress) return;
     requestBusynessData(locationName, locationAddress);
     requestLiveData(locationName, locationAddress);
+    setLocationCoordinates({
+      longitude: results.result.center?.[0],
+      latitude: results.result.center?.[1],
+    });
   };
 
+  //returns an array of location name and address
   const getParams = (results) => {
     const placeName = results.result.place_name;
     if (placeName != null) {
@@ -152,8 +165,13 @@ const Map = () => {
             mapboxApiAccessToken={accessToken}
             mapStyle='mapbox://styles/karin-kazarian/ckmyepr931r7317prtkdbrhj1'
             onViewportChange={handleViewportChange}
-            //onTransitionEnd={apiTest}
           >
+            <Marker
+              latitude={locationCoordinates.latitude}
+              longitude={locationCoordinates.longitude}
+            >
+              <Icon color='black' as={FaMapMarkerAlt} w={8} h={8} />
+            </Marker>
             <Geocoder
               mapRef={mapRef}
               containerRef={geocoderContainerRef}
