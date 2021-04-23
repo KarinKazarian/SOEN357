@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/time-saver/static/js/main.81d156c8.chunk.js",
-    "main.js.map": "/time-saver/static/js/main.81d156c8.chunk.js.map",
+    "main.js": "/time-saver/static/js/main.26e0beae.chunk.js",
+    "main.js.map": "/time-saver/static/js/main.26e0beae.chunk.js.map",
     "runtime-main.js": "/time-saver/static/js/runtime-main.b5d39b63.js",
     "runtime-main.js.map": "/time-saver/static/js/runtime-main.b5d39b63.js.map",
     "static/js/2.fe8d41a7.chunk.js": "/time-saver/static/js/2.fe8d41a7.chunk.js",
@@ -13,6 +13,6 @@
   "entrypoints": [
     "static/js/runtime-main.b5d39b63.js",
     "static/js/2.fe8d41a7.chunk.js",
-    "static/js/main.81d156c8.chunk.js"
+    "static/js/main.26e0beae.chunk.js"
   ]
 }
